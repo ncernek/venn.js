@@ -112,7 +112,8 @@ normalization are the same.</p>
     <script src="../venn.js"></script>
     <script src="./test_utils.js"></script>
     <script>
-        var div = d3.select("#visualtest")
+        //Unterminated statement fixed
+        var div = d3.select("#visualtest");
         var width = div.select("#original")[0][0].offsetWidth - 15;
         var circleCount = 4, current;
         var minRadius = 0.05, maxRadius = 0.2;
@@ -143,7 +144,7 @@ normalization are the same.</p>
 
             var success = hilightErrors(div, areas, current);
             div.select("#reconstructed h3").text("Normalized: " + (success ? "Success!" : "Failure"));
-        };
+        }
 
        function scanerror() {
             var original, areas, computed, failedAreas;
@@ -152,7 +153,7 @@ normalization are the same.</p>
                 areas = getIntersections(original);
                 computed = venn.normalizeSolution(original);
 
-                var failedAreas = getErrors(areas, computed);
+                failedAreas = getErrors(areas, computed);
                 if (failedAreas.length) {
                     console.log("FAILED!");
                     console.log(JSON.stringify(original, null, "\t"));
@@ -163,7 +164,8 @@ normalization are the same.</p>
             setAreas(original, areas, computed);
             var heading = div.select("#reconstructed h3");
             heading.text("Reconstructed: " + (failedAreas.length == 0 ? "Success!" : "Failure"));
-            heading.append("br")
+           //Unterminated statement fixed
+            heading.append("br");
 
             if (failedAreas.length) {
                 heading.append("small").text( "Ran " + (i) + " trails before finding an error");
