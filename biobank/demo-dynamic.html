@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Demo 1: Dynamic</title>
+    <style>
+        body {
+            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+<div style="float:left;padding:20px">
+    <table>
+    <tr>
+      <td>|A|</td>
+      <td>
+        <input label="A" class="input-mini venn_area" id="A" type="number" value="16">
+      </td>
+    </tr>
+    <tr>
+      <td>|B|</td>
+      <td>
+        <input label="B" class="input-mini venn_area" id="B" type="number" value="16">
+      </td>
+    </tr>
+    <tr>
+      <td>|C|</td>
+      <td>
+        <input label="C" class="input-mini venn_area" id="C" type="number" value="12">
+      </td>
+    </tr>
+    <tr>
+      <td>|A&#8745B|</td>
+      <td>
+        <input label="A,B" class="input-mini venn_area" id="A,B" type="number" value="4">
+      </td>
+    </tr>
+    <tr>
+      <td>|A&#8745C|</td>
+      <td>
+        <input label="A,C" class="input-mini venn_area" id="A,C" type="number" value="4">
+      </td>
+    </tr>
+    <tr>
+      <td>|B&#8745C|</td>
+      <td>
+        <input label="B,C" class="input-mini venn_area" id="B,C" type="number" value="3">
+      </td>
+    </tr>
+    <tr>
+      <td>|A&#8745B&#8745C|&nbsp</td>
+      <td>
+        <input label="A,B,C" class="input-mini venn_area" id="A,B,C" type="number" value="2">
+      </td>
+    </tr>
+    </table>
+</div>
+<div id="venn"></div>
+<div style="clear: both;"></div>
+<!--<style>-->
+    <!--.venntooltip {-->
+        <!--position: absolute;-->
+        <!--text-align: center;-->
+        <!--width: 128px;-->
+        <!--height: 16px;-->
+        <!--background: #333;-->
+        <!--color: #ddd;-->
+        <!--padding: 2px;-->
+        <!--border: 0px;-->
+        <!--border-radius: 8px;-->
+        <!--opacity: 0;-->
+    <!--}-->
+<!--</style>-->
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script src="../venn.js"></script>
+<script>
+function getSetIntersections() {
+    areas = d3.selectAll(".venn_area")[0].map(
+        function (element) {
+            return { sets: element.id.split(","),
+                     size: parseFloat(element.value)};} );
+    return areas;
+}
+
+
+// draw the initial set
+var chart = venn.VennDiagram()
+                 .width(600)
+                 .height(500);
+
+d3.select("#venn").datum(getSetIntersections()).call(chart);
+
+// redraw the sets on any change in input
+d3.selectAll("input").on("change", function() {
+    d3.select("#venn").datum(getSetIntersections()).call(chart);
+});
+
+// tweak style
+//var colours = ['red', 'green', 'black'];
+//d3.selectAll("#venn .venn-circle path")
+//    .style("fill-opacity", 0)
+//    .style("stroke-width", 10)
+//    .style("stroke-opacity", .5)
+//    .style("stroke", function(d,i) { return colours[i]; });
+//
+//d3.selectAll("#venn .venn-circle text")
+//    .style("fill", function(d,i) { return colours[i]})
+//    .style("font-size", "32px")
+//    .style("font-weight", "100");
+
+</script>
+<script>
+    function getSetIntersections() {
+        areas = d3.selectAll(".venn_area")[0].map(
+                function (element) {
+                    return { sets: element.id.split(","),
+                        size: parseFloat(element.value)};} );
+        return areas;
+    }
+
+    var chart = venn.VennDiagram()
+            .width(500)
+            .height(500);
+
+    var div = d3.select("#venn");
+    div.datum(getSetIntersections()).call(chart);
+
+    var tooltip = d3.select("body").append("div")
+            .attr("class", "venntooltip");
+
+    div.selectAll("path")
+            .style("stroke-opacity", 0)
+            .style("stroke", "#fff")
+            .style("stroke-width", 0);
+
+    div.selectAll("g")
+            .on("mouseover", function(d) {
+                // sort all the areas relative to the current item
+                venn.sortAreas(div, d);
+
+                // Display a tooltip with the current size
+                tooltip.transition().duration(400).style("opacity", .9);
+                tooltip.text(d.size + " users");
+
+                // highlight the current path
+                var selection = d3.select(this).transition("tooltip").duration(400);
+                selection.select("path")
+                        .style("stroke-width", 3)
+                        .style("fill-opacity", d.sets.length == 1 ? .4 : .1)
+                        .style("stroke-opacity", 1);
+            })
+
+            .on("mousemove", function() {
+                tooltip.style("left", (d3.event.pageX) + "px")
+                        .style("top", (d3.event.pageY - 28) + "px");
+            })
+
+            .on("mouseout", function(d) {
+                tooltip.transition().duration(400).style("opacity", 0);
+                var selection = d3.select(this).transition("tooltip").duration(400);
+                selection.select("path")
+                        .style("stroke-width", 0)
+                        .style("fill-opacity", d.sets.length == 1 ? .25 : .0)
+                        .style("stroke-opacity", 0);
+            });
+</script>
+</html>
