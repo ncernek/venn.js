@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" ng-app="vennApp">
 <head>
     <meta charset="utf-8">
-    <title>Demo 1: Dynamic</title>
+    <title>Venn Diagram: Biobank Search</title>
     <style>
         body {
             font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -11,15 +11,22 @@
     </style>
 </head>
 
-<body>
+<body ng-controller="MainCtrl">
 <div style="float:left;padding:20px">
     <table>
+    <!--<tr ng-repeat="set in sets">-->
+      <!--<td>|{{set.id}}|</td>-->
+      <!--<td>-->
+        <!--<input label="{{set.id}}" class="input-mini venn_area" id="{{set.id}}" type="number" value="{{set.size}}">-->
+      <!--</td>-->
+    <!--</tr>-->
     <tr>
-      <td>|A|</td>
-      <td>
-        <input label="A" class="input-mini venn_area" id="A" type="number" value="16">
-      </td>
+        <td>|A|</td>
+        <td>
+            <input label="A" class="input-mini venn_area" id="A" type="number" value="20">
+        </td>
     </tr>
+    <tr>
     <tr>
       <td>|B|</td>
       <td>
@@ -58,61 +65,33 @@
     </tr>
     </table>
 </div>
+
+
 <div id="venn"></div>
 <div style="clear: both;"></div>
-<!--<style>-->
-    <!--.venntooltip {-->
-        <!--position: absolute;-->
-        <!--text-align: center;-->
-        <!--width: 128px;-->
-        <!--height: 16px;-->
-        <!--background: #333;-->
-        <!--color: #ddd;-->
-        <!--padding: 2px;-->
-        <!--border: 0px;-->
-        <!--border-radius: 8px;-->
-        <!--opacity: 0;-->
-    <!--}-->
-<!--</style>-->
-</body>
+<style>
+    .venntooltip {
+        position: absolute;
+        text-align: center;
+        width: 128px;
+        height: 16px;
+        background: #333;
+        color: #ddd;
+        padding: 2px;
+        border: 0px;
+        border-radius: 8px;
+        opacity: 0;
+    }
+</style>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+
 <script src="../venn.js"></script>
-<script>
-function getSetIntersections() {
-    areas = d3.selectAll(".venn_area")[0].map(
-        function (element) {
-            return { sets: element.id.split(","),
-                     size: parseFloat(element.value)};} );
-    return areas;
-}
+<script src="app.js"></script>
+<script src="allControllers.js"></script>
 
-
-// draw the initial set
-var chart = venn.VennDiagram()
-                 .width(600)
-                 .height(500);
-
-d3.select("#venn").datum(getSetIntersections()).call(chart);
-
-// redraw the sets on any change in input
-d3.selectAll("input").on("change", function() {
-    d3.select("#venn").datum(getSetIntersections()).call(chart);
-});
-
-// tweak style
-//var colours = ['red', 'green', 'black'];
-//d3.selectAll("#venn .venn-circle path")
-//    .style("fill-opacity", 0)
-//    .style("stroke-width", 10)
-//    .style("stroke-opacity", .5)
-//    .style("stroke", function(d,i) { return colours[i]; });
-//
-//d3.selectAll("#venn .venn-circle text")
-//    .style("fill", function(d,i) { return colours[i]})
-//    .style("font-size", "32px")
-//    .style("font-weight", "100");
-
-</script>
 <script>
     function getSetIntersections() {
         areas = d3.selectAll(".venn_area")[0].map(
@@ -129,8 +108,16 @@ d3.selectAll("input").on("change", function() {
     var div = d3.select("#venn");
     div.datum(getSetIntersections()).call(chart);
 
+    d3.selectAll("input").on("change", function() {
+        d3.select("#venn").datum(getSetIntersections()).call(chart);
+    });
+
     var tooltip = d3.select("body").append("div")
             .attr("class", "venntooltip");
+
+d3.selectAll("input").on("change", function() {
+    d3.select("#venn").datum(getSetIntersections()).call(chart);
+});
 
     div.selectAll("path")
             .style("stroke-opacity", 0)
@@ -168,4 +155,5 @@ d3.selectAll("input").on("change", function() {
                         .style("stroke-opacity", 0);
             });
 </script>
+</body>
 </html>

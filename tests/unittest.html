@@ -81,7 +81,7 @@
             var loss = function(x, xprime) { 
                 xprime[0] = 2 * (x[0] - 10);
                 return (x[0] - 10) * (x[0] - 10); 
-            }
+            };
             var solution = venn.minimizeConjugateGradient(loss, [0]).x;
             nearlyEqual(solution[0], 10, 1e-10);
         });
@@ -162,7 +162,7 @@
                 }
 
                 return points;
-            }
+            };
 
             // fully contained
             equal(venn.circleCircleIntersection({x:0, y:3, radius:10},
