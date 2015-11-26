@@ -11,7 +11,7 @@
     </style>
 </head>
 
-<body ng-controller="MainCtrl">
+<body ng-controller="SalesController">
 <div style="float:left;padding:20px">
     <table>
     <!--<tr ng-repeat="set in sets">-->
@@ -23,44 +23,44 @@
     <tr>
         <td>|A|</td>
         <td>
-            <input label="A" class="input-mini venn_area" id="A" type="number" value="20">
+            <input class="input-mini venn_area" id="A" type="number" ng-model="a">
         </td>
     </tr>
     <tr>
     <tr>
       <td>|B|</td>
       <td>
-        <input label="B" class="input-mini venn_area" id="B" type="number" value="16">
+        <input class="input-mini venn_area" id="B" type="number" ng-model="b">
       </td>
     </tr>
     <tr>
       <td>|C|</td>
       <td>
-        <input label="C" class="input-mini venn_area" id="C" type="number" value="12">
+        <input class="input-mini venn_area" id="C" type="number" ng-model="c">
       </td>
     </tr>
     <tr>
       <td>|A&#8745B|</td>
       <td>
-        <input label="A,B" class="input-mini venn_area" id="A,B" type="number" value="4">
+        <input class="input-mini venn_area" id="A,B" type="number" ng-model="ab">
       </td>
     </tr>
     <tr>
       <td>|A&#8745C|</td>
       <td>
-        <input label="A,C" class="input-mini venn_area" id="A,C" type="number" value="4">
+        <input class="input-mini venn_area" id="A,C" type="number" ng-model="ac">
       </td>
     </tr>
     <tr>
       <td>|B&#8745C|</td>
       <td>
-        <input label="B,C" class="input-mini venn_area" id="B,C" type="number" value="3">
+        <input class="input-mini venn_area" id="B,C" type="number" ng-model="bc">
       </td>
     </tr>
     <tr>
       <td>|A&#8745B&#8745C|&nbsp</td>
       <td>
-        <input label="A,B,C" class="input-mini venn_area" id="A,B,C" type="number" value="2">
+        <input class="input-mini venn_area" id="A,B,C" type="number" ng-model="abc">
       </td>
     </tr>
     </table>
@@ -68,6 +68,7 @@
 
 
 <div id="venn"></div>
+
 <div style="clear: both;"></div>
 <style>
     .venntooltip {
@@ -83,8 +84,7 @@
         opacity: 0;
     }
 </style>
-
-
+</body>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 
@@ -92,68 +92,4 @@
 <script src="app.js"></script>
 <script src="allControllers.js"></script>
 
-<script>
-    function getSetIntersections() {
-        areas = d3.selectAll(".venn_area")[0].map(
-                function (element) {
-                    return { sets: element.id.split(","),
-                        size: parseFloat(element.value)};} );
-        return areas;
-    }
-
-    var chart = venn.VennDiagram()
-            .width(500)
-            .height(500);
-
-    var div = d3.select("#venn");
-    div.datum(getSetIntersections()).call(chart);
-
-    d3.selectAll("input").on("change", function() {
-        d3.select("#venn").datum(getSetIntersections()).call(chart);
-    });
-
-    var tooltip = d3.select("body").append("div")
-            .attr("class", "venntooltip");
-
-d3.selectAll("input").on("change", function() {
-    d3.select("#venn").datum(getSetIntersections()).call(chart);
-});
-
-    div.selectAll("path")
-            .style("stroke-opacity", 0)
-            .style("stroke", "#fff")
-            .style("stroke-width", 0);
-
-    div.selectAll("g")
-            .on("mouseover", function(d) {
-                // sort all the areas relative to the current item
-                venn.sortAreas(div, d);
-
-                // Display a tooltip with the current size
-                tooltip.transition().duration(400).style("opacity", .9);
-                tooltip.text(d.size + " users");
-
-                // highlight the current path
-                var selection = d3.select(this).transition("tooltip").duration(400);
-                selection.select("path")
-                        .style("stroke-width", 3)
-                        .style("fill-opacity", d.sets.length == 1 ? .4 : .1)
-                        .style("stroke-opacity", 1);
-            })
-
-            .on("mousemove", function() {
-                tooltip.style("left", (d3.event.pageX) + "px")
-                        .style("top", (d3.event.pageY - 28) + "px");
-            })
-
-            .on("mouseout", function(d) {
-                tooltip.transition().duration(400).style("opacity", 0);
-                var selection = d3.select(this).transition("tooltip").duration(400);
-                selection.select("path")
-                        .style("stroke-width", 0)
-                        .style("fill-opacity", d.sets.length == 1 ? .25 : .0)
-                        .style("stroke-opacity", 0);
-            });
-</script>
-</body>
 </html>
