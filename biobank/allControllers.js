@@ -4,26 +4,27 @@ var app = angular.module('chartApp', []);
 
 app.controller('SalesController', ['$scope', function ($scope) {
 
-    var a = $scope.a = 50;
-    var b = $scope.b = 30;
-    var c = $scope.c = 20;
-    var ab = $scope.ab = 10;
-    var bc = $scope.bc = 10;
-    var ac = $scope.ac = 10;
-    var abc = $scope.abc = 5;
-
-    $scope.salesData = [
-        {sets:"A", size: $scope.a},
-        {sets:"B", size: $scope.b},
-        {sets:"C", size: $scope.c},
-        {sets:"A,B", size: $scope.ab},
-        {sets:"B,C", size: $scope.bc},
-        {sets:"A,C", size: $scope.ac},
-        {sets:"A,B,C", size: $scope.abc}
-    ];
+    $scope.a = 50;
+    $scope.b = 30;
+    $scope.c = 20;
+    $scope.ab = 10;
+    $scope.bc = 10;
+    $scope.ac = 10;
+    $scope.abc = 5;
 
 
-
+    function updateSalesData(){
+        $scope.salesData =
+        [
+            {sets:"A", size: $scope.a},
+            {sets:"B", size: $scope.b},
+            {sets:"C", size: $scope.c},
+            {sets:"A,B", size: $scope.ab},
+            {sets:"B,C", size: $scope.bc},
+            {sets:"A,C", size: $scope.ac},
+            {sets:"A,B,C", size: $scope.abc}
+        ];
+    }
 
     var getSetIntersections = function() {
         return $scope.salesData.map(
@@ -38,10 +39,11 @@ app.controller('SalesController', ['$scope', function ($scope) {
         .height(500);
 
     var div = d3.select("#venn");
-
+    updateSalesData();
     div.datum(getSetIntersections()).call(chart);
 
     d3.selectAll("input").on("change", function () {
+        updateSalesData();
         console.log("changed:", getSetIntersections());
         div.datum(getSetIntersections()).call(chart);
     });
