@@ -1,8 +1,8 @@
 'use strict';
 
-var app = angular.module('chartApp', []);
+var app = angular.module('drawApp', []);
 
-app.controller('SalesController', ['$scope', function ($scope) {
+app.controller('SearchController', ['$scope', function ($scope) {
 
     $scope.a = 50;
     $scope.b = 30;
@@ -13,8 +13,8 @@ app.controller('SalesController', ['$scope', function ($scope) {
     $scope.abc = 5;
 
 
-    function updateSalesData(){
-        $scope.salesData =
+    function updateSearchData(){
+        $scope.searchData =
         [
             {sets:"A", size: $scope.a},
             {sets:"B", size: $scope.b},
@@ -27,7 +27,7 @@ app.controller('SalesController', ['$scope', function ($scope) {
     }
 
     var getSetIntersections = function() {
-        return $scope.salesData.map(
+        return $scope.searchData.map(
             function (element) {
                 return { sets: element.sets.split(","),
                     size: parseInt(element.size)};
@@ -39,12 +39,11 @@ app.controller('SalesController', ['$scope', function ($scope) {
         .height(500);
 
     var div = d3.select("#venn");
-    updateSalesData();
+    updateSearchData();
     div.datum(getSetIntersections()).call(chart);
 
     d3.selectAll("input").on("change", function () {
-        updateSalesData();
-        console.log("changed:", getSetIntersections());
+        updateSearchData();
         div.datum(getSetIntersections()).call(chart);
     });
 
