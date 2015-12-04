@@ -1,8 +1,9 @@
 'use strict';
 
-var app = angular.module('drawApp', []);
+//dependency of app.js
+var drawApp = angular.module('drawApp', []);
 
-app.controller('SearchController', ['$scope', function ($scope) {
+drawApp.controller('SearchController', ['$scope', function ($scope) {
 
     $scope.a = 50;
     $scope.b = 30;
